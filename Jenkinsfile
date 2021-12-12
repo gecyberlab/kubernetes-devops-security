@@ -19,5 +19,12 @@ jacoco execPattern: 'target/jacococ.exec'
 }
 }
 }
-              }
+stage('Docker build and push') {
+	steps {
+		sh 'printenv'
+		sh 'docker build -t talmanor/numeric-app:""$GIT_COMMIT"" .'
+		sh 'docker push talmanor/numeric-app:""$GIT_COMMIT""'
+}
+}
+            }  
             }
