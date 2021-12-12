@@ -2,9 +2,7 @@ pipeline {
   agent
   any
   stages {
-  	stage(
-  		'Build Artifact'
-  	) {
+  	stage('Build Artifact') {
   		steps {
   			sh "mvn clean package -DskipTests=true"
   			archive 'target/*.jar'
@@ -20,6 +18,7 @@ pipeline {
 				jacoco execPattern: 'target/jacococ.exec'
 			}
 		}
+	}
 	stage('Docker build and push') {
 		steps {
 			withDockerRegistry([credentialsId: "docker-hub", url: ""]) {
@@ -37,6 +36,5 @@ pipeline {
 			}
 		}
 	}
-}
 }
 }
