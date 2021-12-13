@@ -18,6 +18,13 @@ pipeline {
 			}
 		}
 	}
+	
+	stage('Sonarqube - SAST') {
+		steps {
+			sh "mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-application2 -Dsonar.host.url=http://devsecops-tal.eastus.cloudapp.azure.com:9000 -Dsonar.login=ac2bcbbef0432c4dfa8c1df599c3f720207a4214"
+		}
+	}
+  
 	stage('Mutation Tests - PIT') {
       steps {
         sh "mvn org.pitest:pitest-maven:mutationCoverage"
