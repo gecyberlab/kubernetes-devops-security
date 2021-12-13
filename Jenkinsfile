@@ -19,11 +19,18 @@ pipeline {
 		}
 	}
 	
-	stage('Sonarqube - SAST') {
-		steps {
-			sh "mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-application2 -Dsonar.host.url=http://devsecops-tal.eastus.cloudapp.azure.com:9000 -Dsonar.login=ac2bcbbef0432c4dfa8c1df599c3f720207a4214"
-		}
-	}
+	stage('SonarQube - SAST') {
+      steps {
+        withSonarQubeEnv('SonarQube') {
+          sh "mvn sonar:sonar -Dsonar.projectKey=numeric-application -Dsonar.host.url=http://devsecops-tal.eastus.cloudapp.azure.com:9000 -Dsonar.login=0925129cf435c63164d3e63c9f9d88ea9f9d7f05"
+        }
+        timeout(time: 2, unit: 'MINUTES') {
+          script {
+            waitForQualityGate abortPipeline: true
+          }
+        }
+      }
+    }
   
 	stage('Mutation Tests - PIT') {
       steps {
