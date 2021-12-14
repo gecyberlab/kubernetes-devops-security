@@ -19,6 +19,17 @@ pipeline {
 		}
 	}
 	
+	stage('Mutation Tests - PIT') {
+      steps {
+        sh "mvn org.pitest:pitest-maven:mutationCoverage"
+      }
+      post {
+        always {
+          pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
+        }
+      }
+    }
+
 	stage('SonarQube - SAST') {
       steps {
         withSonarQubeEnv('sonarqube-server') {
@@ -31,17 +42,19 @@ pipeline {
         }
       }
     }
-  
-	stage('Mutation Tests - PIT') {
+    
+        stage('Vulnerability Scan - Docker ') {
       steps {
-        sh "mvn org.pitest:pitest-maven:mutationCoverage"
+        sh "mvn dependency-check:check"
       }
       post {
         always {
-          pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
+          dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
         }
       }
     }
+    
+  
 	stage('Docker build and push') {
 		steps {
 			withDockerRegistry([credentialsId: "docker-hub", url: ""]) {
