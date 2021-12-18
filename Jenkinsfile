@@ -86,6 +86,10 @@ pipeline {
     }
 }
 		post {
+			failure
+			{
+				kubectl rollout undo deployment/devsecops
+			}
 			always {
 				junit 'target/surefire-reports/*.xml'
 				jacoco execPattern: 'target/jacococ.exec'
@@ -93,6 +97,7 @@ pipeline {
 	            pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
 	            publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'owasp-zap-report', reportFiles: 'zap_report.html', reportName: 'OWASP ZAP HTML Report', reportTitles: 'OWASP ZAP HTML Report'])	            
 			}
+			
 		}
 
 }
