@@ -1,5 +1,15 @@
 pipeline {
   agent any
+  
+    environment {
+    deploymentName = "devsecops"
+    containerName = "devsecops-container"
+    serviceName = "devsecops-svc"
+    imageName = "talmanor/numeric-app:${GIT_COMMIT}"
+    applicationURL = "http://devsecops-tal.eastus.cloudapp.azure.com"
+    applicationURI = "/increment/99"
+  }
+  
   stages {
   	stage('Build Artifact') {
   		steps {
@@ -41,7 +51,7 @@ pipeline {
           "Trivy Scan": {
             sh "bash trivy-docker-image-scan.sh"
           },
-          "OPA Conftest": {
+          "OPA onftest": {
             sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
           }
         )
