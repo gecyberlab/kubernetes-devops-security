@@ -88,7 +88,7 @@ pipeline {
 		post {
 			failure {
 				withKubeConfig([credentialsId: "kubeconfig"]) {
-							sh "kubectl rollout undo devsecops"
+							sh "kubectl rollout undo deployment.apps/devsecops"
 						}
 			}
 			always {
