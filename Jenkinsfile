@@ -91,9 +91,7 @@ pipeline {
 							sh "kubectl rollout undo deployment.apps/devsecops"
 						}
 			}
-		}
-		post
-		{
+			
 			always {
 				junit 'target/surefire-reports/*.xml'
 				jacoco execPattern: 'target/jacococ.exec'
