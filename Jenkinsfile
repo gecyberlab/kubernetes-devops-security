@@ -86,9 +86,8 @@ pipeline {
     }
 }
 		post {
-			failure
-			{
-				kubectl rollout undo deployment/devsecops
+			failure {
+				sh "kubectl rollout undo deployment/devsecops"
 			}
 			always {
 				junit 'target/surefire-reports/*.xml'
