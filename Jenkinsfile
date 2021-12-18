@@ -87,7 +87,9 @@ pipeline {
 }
 		post {
 			failure {
-				sh "kubectl rollout undo devsecops"
+				withKubeConfig([credentialsId: "kubeconfig"]) {
+							sh "kubectl rollout undo devsecops"
+						}
 			}
 			always {
 				junit 'target/surefire-reports/*.xml'
